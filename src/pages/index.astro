@@ -1,0 +1,80 @@
+---
+import "../styles/global.css";
+import summaryData from "../data/data.json";
+
+// Calculates the average score from the summary data
+function calculateAverage(data) {
+	const sum = data.reduce((acc, item) => acc + item.score, 0);
+	return sum / data.length;
+}
+
+// Formats the average score for display purposes
+function formatAverage(average) {
+	return new Intl.NumberFormat(undefined, {
+		maximumSignificantDigits: 2,
+	}).format(average);
+}
+
+const average = calculateAverage(summaryData);
+const averageFormatted = formatAverage(average);
+
+const date = new Intl.DateTimeFormat("en-US", {
+	year: "numeric",
+}).format(new Date());
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="generator" content={Astro.generator}/>
+	<link rel="preconnect" href="https://fonts.googleapis.com"/>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+	<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+	<title>Astro</title>
+</head>
+<body>
+<main>
+	<article class="card" aria-labelledby="result-heading">
+		<div class="overview">
+			<h2 id="result-heading">Your Result</h2>
+			<div class="average" aria-labelledby="average-score">
+				<p class="score-display" id="average-score" tabindex="0">{averageFormatted}</p>
+				<p class="body-text" role="term" tabindex="0">of 100</p>
+			</div>
+			<div class="description" aria-labelledby="result-description">
+				<p class="title" id="result-description" tabindex="0">Great</p>
+				<p class="body-text"  tabindex="0">
+					You scored higher than 65% of the people who have taken these tests.
+				</p>
+			</div>
+		</div>
+		<div class="summary" aria-labelledby="summary-title">
+			<p class="summary-title" id="summary-title" tabindex="0">Summary</p>
+			<div class="summary-cards" role="list">
+				{
+					summaryData.map((item) => (
+						<div class="summary-card" data-color={item.color} role="listitem" tabindex="0">
+							<div class="category" aria-labelledby="category-{item.category}">
+								<img src={item.icon} alt="{item.category} icon" />
+								<p id="category-{item.category}" tabindex="0">{item.category}</p>
+							</div>
+							<p class="score" tabindex="0">
+								<span>{item.score}</span>/ 100
+							</p>
+						</div>
+					))
+				}
+			</div>
+			<button class="btn" aria-label="Continue to the next step" tabindex="0">Continue</button>
+		</div>
+	</article>
+</main>
+<footer>
+	<p class="footer-text" tabindex="0">© {date} Pious</p>
+</footer>
+</body>
+</html>
